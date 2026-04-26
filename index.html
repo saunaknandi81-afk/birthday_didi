@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Birthday Surprise 🎁</title>
+
+<style>
+body{
+text-align:center;
+font-family:Arial;
+background:linear-gradient(135deg,#ff9a9e,#fad0c4);
+color:white;
+margin:0;
+padding-top:50px;
+overflow-x:hidden;
+}
+
+h1{
+animation:fadeIn 2s;
+}
+
+button{
+padding:12px 25px;
+font-size:18px;
+background:white;
+color:#ff4da6;
+border:none;
+border-radius:25px;
+cursor:pointer;
+margin-top:20px;
+}
+
+#video1{
+width:300px;
+display:none;
+margin-top:20px;
+border-radius:15px;
+}
+
+#video2a{
+display:none;
+}
+
+#giftBox{
+font-size:90px;
+display:none;
+cursor:pointer;
+animation:bounce 1s infinite;
+}
+
+#tapText{
+display:none;
+font-size:20px;
+margin-top:10px;
+}
+
+#finalMsg{
+display:none;
+font-size:24px;
+margin-top:20px;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+pointer-events:none;
+}
+
+@keyframes bounce{
+50%{transform:translateY(-15px);}
+}
+
+@keyframes fadeIn{
+from{opacity:0;}
+to{opacity:1;}
+}
+</style>
+
+</head>
+
+<body>
+
+<canvas id="confetti"></canvas>
+
+<h1>🎉 Happy Birthday Tinni Didivai 🎉</h1>
+
+<button onclick="start()">Tap to Start 💖</button>
+
+<video id="video1" controls>
+<source src="video1.mp4" type="video/mp4">
+</video>
+
+<div id="giftBox" onclick="openGift()">🎁</div>
+<div id="tapText">Tap to open the surprise 💝</div>
+
+<video id="video2a" controls>
+<source src="video2a.mp4" type="video/mp4">
+</video>
+
+<div id="finalMsg">
+💖 You are my most special person 💖
+</div>
+
+<script>
+
+function start(){
+let v1=document.getElementById("video1");
+
+v1.style.display="block";
+v1.play();
+
+v1.onended=function(){
+document.getElementById("giftBox").style.display="block";
+document.getElementById("tapText").style.display="block";
+}
+}
+
+function openGift(){
+
+let v2=document.getElementById("video2a");
+
+document.getElementById("giftBox").style.display="none";
+document.getElementById("tapText").style.display="none";
+document.querySelector("h1").style.display="none";
+document.querySelector("button").style.display="none";
+document.getElementById("video1").style.display="none";
+
+/* Full screen video */
+v2.style.display="block";
+v2.style.position="fixed";
+v2.style.top="0";
+v2.style.left="0";
+v2.style.width="100vw";
+v2.style.height="100vh";
+v2.style.objectFit="contain";
+v2.style.background="black";
+v2.style.zIndex="9999";
+
+/* Open phone fullscreen */
+if(v2.requestFullscreen){
+v2.requestFullscreen();
+}
+
+v2.play();
+
+v2.onended=function(){
+
+if(document.fullscreenElement){
+document.exitFullscreen();
+}
+
+v2.style.display="none";
+
+document.getElementById("finalMsg").style.display="block";
+
+startConfetti();
+
+}
+}
+
+
+/* Confetti */
+
+const canvas=document.getElementById("confetti");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+let confetti=[];
+
+function startConfetti(){
+
+for(let i=0;i<150;i++){
+confetti.push({
+x:Math.random()*canvas.width,
+y:Math.random()*canvas.height,
+r:Math.random()*6+2,
+d:Math.random()*5
+});
+}
+
+animate();
+}
+
+function animate(){
+
+ctx.clearRect(0,0,canvas.width,canvas.height);
+
+confetti.forEach(c=>{
+
+ctx.beginPath();
+ctx.arc(c.x,c.y,c.r,0,Math.PI*2);
+ctx.fillStyle=`hsl(${Math.random()*360},100%,50%)`;
+ctx.fill();
+
+c.y+=c.d;
+
+if(c.y>canvas.height){
+c.y=0;
+}
+
+});
+
+requestAnimationFrame(animate);
+}
+
+</script>
+
+</body>
+</html>
