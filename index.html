@@ -13,10 +13,8 @@ body {
   text-align: center;
 }
 
-/* HIDE */
 .hidden { display: none; }
 
-/* BUTTON */
 .btn {
   padding: 12px 20px;
   background: #ff4da6;
@@ -27,13 +25,18 @@ body {
   cursor: pointer;
 }
 
-/* GIFT */
 .gift-box {
   font-size: 80px;
   cursor: pointer;
+  animation: bounce 1.5s infinite;
 }
 
-/* VIDEO BASE */
+@keyframes bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
+}
+
+/* VIDEO */
 .fullscreen-video {
   position: fixed;
   top: 0;
@@ -48,19 +51,14 @@ body {
   transition: all 1s ease;
 }
 
-/* SHOW ANIMATION */
 .fullscreen-video.show {
   opacity: 1;
   transform: scale(1);
 }
 
-/* VERTICAL FULL */
 .vertical { object-fit: cover; }
-
-/* HORIZONTAL FIT */
 .horizontal { object-fit: contain; }
 
-/* EXIT ANIMATION */
 .fade-out {
   opacity: 0 !important;
   transform: scale(0.9) !important;
@@ -84,6 +82,12 @@ body {
 
 #endText.show {
   opacity: 1;
+  animation: glow 2s infinite alternate;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px pink; }
+  to { box-shadow: 0 0 25px hotpink; }
 }
 
 /* CONFETTI */
@@ -102,7 +106,6 @@ canvas {
 <div id="frontPage">
   <h1>Happyyyyyy Birthdayyyyyy Diiiiiidiiiiii!!! 💖</h1>
 
-  
   <p>
     to my best Buddy.<br><br>
     I just wanna let you know that you mean so much to me.<br>
@@ -133,7 +136,7 @@ canvas {
 <!-- VIDEO 1 -->
 <div id="video1Page" class="hidden">
   <video id="video1" controls width="90%">
-    <source src="video1.mp4">
+    <source src="video1.mp4" type="video/mp4">
   </video>
 </div>
 
@@ -145,21 +148,21 @@ canvas {
 
 <!-- VIDEO 2 -->
 <div id="video2aPage" class="hidden">
-  <video id="video2a" playsinline webkit-playsinline>
-    <source src="video2a.mp4">
+  <video id="video2a" playsinline webkit-playsinline muted>
+    <source src="video2a.mp4" type="video/mp4">
   </video>
 </div>
 
 <!-- END TEXT -->
 <div id="endText">
-  💖 You are my one of the most special person 💖
+  💖 You are one of the most special person in my life 💖
 </div>
 
 <canvas id="confetti"></canvas>
 
 <script>
 
-// START VIDEO 1
+// VIDEO 1
 function startVideo1() {
   frontPage.classList.add("hidden");
   video1Page.classList.remove("hidden");
@@ -182,7 +185,6 @@ function openGift() {
 
   v2.classList.add("fullscreen-video");
 
-  // detect vertical or horizontal
   v2.onloadedmetadata = () => {
     if (v2.videoHeight > v2.videoWidth) {
       v2.classList.add("vertical");
@@ -191,26 +193,24 @@ function openGift() {
     }
   };
 
-  v2.play();
+  // autoplay fix
+  v2.muted = true;
+  v2.play().catch(() => {
+    console.log("Autoplay blocked");
+  });
+
   startConfetti();
 
-  // cinematic entry
   setTimeout(() => {
     v2.classList.add("show");
   }, 100);
 
-  // when video ends
   v2.onended = () => {
-
-    // cinematic exit
     v2.classList.add("fade-out");
 
     setTimeout(() => {
       video2aPage.classList.add("hidden");
-
-      // show text
-      let txt = document.getElementById("endText");
-      txt.classList.add("show");
+      document.getElementById("endText").classList.add("show");
     }, 1000);
   };
 }
@@ -224,7 +224,7 @@ function startConfetti() {
   canvas.height = window.innerHeight;
 
   let pieces = [];
-  for (let i = 0; i < 120; i++) {
+  for (let i = 0; i < 150; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
