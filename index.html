@@ -39,24 +39,47 @@ body {
   margin-top: 20px;
 }
 
-/* HIDE ELEMENTS */
+/* HIDE */
 .hidden {
   display: none;
 }
 
-/* GIFT BOX */
+/* GIFT */
 .gift-box {
   font-size: 80px;
   cursor: pointer;
   margin-top: 20px;
 }
 
-/* VIDEO */
+/* VIDEO NORMAL */
 video {
   width: 90%;
   max-width: 400px;
-  margin-top: 20px;
   border-radius: 10px;
+}
+
+/* FULLSCREEN VIDEO */
+.fullscreen-video {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 999;
+}
+
+/* END TEXT */
+#endText {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 26px;
+  color: white;
+  background: rgba(0,0,0,0.6);
+  padding: 20px;
+  border-radius: 12px;
 }
 
 /* CONFETTI */
@@ -71,31 +94,28 @@ canvas {
 
 <body>
 
-<!-- 🎉 FRONT PAGE TEXT -->
+<!-- FRONT PAGE -->
 <div id="frontPage" class="front-text">
   <h1>Happyyyyyy Birthdayyyyyy Diiiiiidiiiiii!!! 💖</h1>
 
   <p>
     to my best Buddy.<br><br>
-
     I just wanna let you know that you mean so much to me.<br>
     You are not just my sister only... You're a very good friend & good listener also... 😊<br><br>
-
     I feel grateful to have you... 🧸<br><br>
-
     May this birthday bring you lots of love & success 🦋✨<br><br>
-
     I wish you all the happiness of world !!!!<br><br>
-
     Loveeeee Youuuuuu So Much my Gem... 💎<br>
     You're the best......
   </p>
-
+  
+  <p>
+    Promise You To Be Your Side Through Thick & Thin. Just Hold My Hand Tightly 💫🫂
+  </p>
+  
   <p>
     Okay the words are never describes my emotions & feelings for you......<br><br>
-
     May Your God Bless You Always 🌸✨<br><br>
-
     A bond like ours is life long... ♾️ TOUCHWOODDD
   </p>
 
@@ -105,60 +125,77 @@ canvas {
     Bent<br>
     05.10.2026 ♾️
   </p>
-
-  <button class="btn" onclick="startVideo1()">Tap to Start 🎬</button>
+  
+  <button class="btn" onclick="startVideo1()">Click Plezzz 💝 </button>
 </div>
 
-<!-- 🎬 VIDEO 1 -->
+<!-- VIDEO 1 -->
 <div id="video1Page" class="hidden">
   <video id="video1" controls>
     <source src="video1.mp4" type="video/mp4">
   </video>
 </div>
 
-<!-- 🎁 GIFT BOX -->
+<!-- GIFT -->
 <div id="giftPage" class="hidden">
   <h2>🎁 Tap to Open the Gift 🎁</h2>
   <div class="gift-box" onclick="openGift()">🎁</div>
 </div>
 
-<!-- 🎬 VIDEO 2a -->
+<!-- VIDEO 2 FULLSCREEN -->
 <div id="video2aPage" class="hidden">
-  <video id="video2a" controls>
+  <video id="video2a">
     <source src="video2a.mp4" type="video/mp4">
   </video>
 </div>
 
-<!-- 🎊 CONFETTI -->
+<!-- END TEXT -->
+<div id="endText" class="hidden">
+  💖 You are one of the most special persons in my life 💖
+</div>
+
+<!-- CONFETTI -->
 <canvas id="confetti"></canvas>
 
 <script>
-// STEP 1 → Start Video 1
+
+// START VIDEO 1
 function startVideo1() {
-  document.getElementById("frontPage").classList.add("hidden");
-  document.getElementById("video1Page").classList.remove("hidden");
+  frontPage.classList.add("hidden");
+  video1Page.classList.remove("hidden");
 
   let v1 = document.getElementById("video1");
   v1.play();
 
-  v1.onended = function() {
-    document.getElementById("video1Page").classList.add("hidden");
-    document.getElementById("giftPage").classList.remove("hidden");
+  v1.onended = () => {
+    video1Page.classList.add("hidden");
+    giftPage.classList.remove("hidden");
   };
 }
 
-// STEP 2 → Open Gift
+// OPEN GIFT
 function openGift() {
-  document.getElementById("giftPage").classList.add("hidden");
-  document.getElementById("video2aPage").classList.remove("hidden");
+  giftPage.classList.add("hidden");
+  video2aPage.classList.remove("hidden");
 
   let v2 = document.getElementById("video2a");
-  v2.play();
 
+  // make fullscreen style
+  v2.classList.add("fullscreen-video");
+
+  // try real fullscreen (mobile)
+  if (v2.requestFullscreen) v2.requestFullscreen();
+
+  v2.play();
   startConfetti();
+
+  // WHEN VIDEO ENDS → SHOW TEXT
+  v2.onended = () => {
+    document.getElementById("endText").classList.remove("hidden");
+  };
 }
 
-// 🎊 SIMPLE CONFETTI
+// CONFETTI
 function startConfetti() {
   const canvas = document.getElementById("confetti");
   const ctx = canvas.getContext("2d");
@@ -167,11 +204,11 @@ function startConfetti() {
   canvas.height = window.innerHeight;
 
   let pieces = [];
-  for (let i = 0; i < 100; i++) {
+  for (let i = 0; i < 120; i++) {
     pieces.push({
       x: Math.random() * canvas.width,
       y: Math.random() * canvas.height,
-      dy: Math.random() * 3 + 2
+      dy: Math.random() * 4 + 2
     });
   }
 
@@ -180,9 +217,8 @@ function startConfetti() {
     ctx.fillStyle = "pink";
 
     pieces.forEach(p => {
-      ctx.fillRect(p.x, p.y, 5, 5);
+      ctx.fillRect(p.x, p.y, 6, 6);
       p.y += p.dy;
-
       if (p.y > canvas.height) p.y = 0;
     });
 
@@ -191,7 +227,9 @@ function startConfetti() {
 
   update();
 }
+
 </script>
 
 </body>
+</html>
 </html>
